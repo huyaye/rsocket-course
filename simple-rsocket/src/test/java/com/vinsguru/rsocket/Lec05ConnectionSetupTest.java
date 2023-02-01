@@ -24,17 +24,15 @@ public class Lec05ConnectionSetupTest {
     @BeforeAll
     public void setup(){
         Mono<RSocket> socketMono = RSocketConnector.create()
-                .setupPayload(DefaultPayload.create("user:passwrd"))
+                .setupPayload(DefaultPayload.create("user:password"))   // 값변경하면서 테스트
                 .connect(TcpClientTransport.create("localhost", 6565))
                 .doOnNext(r -> System.out.println("going to connect"));
 
         this.rSocketClient = RSocketClient.from(socketMono);
-
     }
 
     @Test
     public void connectionTest()  {
-
         Payload payload = ObjectUtil.toPayload(new RequestDto(5));
 
         Flux<ResponseDto> flux = this.rSocketClient.requestStream(Mono.just(payload))
@@ -44,9 +42,5 @@ public class Lec05ConnectionSetupTest {
         StepVerifier.create(flux)
                 .expectNextCount(10)
                 .verifyComplete();
-
-
     }
-
-
 }

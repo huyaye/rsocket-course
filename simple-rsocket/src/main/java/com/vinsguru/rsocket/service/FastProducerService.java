@@ -9,7 +9,7 @@ public class FastProducerService implements RSocket {
 
     @Override
     public Flux<Payload> requestStream(Payload payload) {
-        return Flux.range(1, 1000)
+        return Flux.range(1, 100)
                     .map(i -> i + "")
                     .doOnNext(System.out::println)
                     .doFinally(System.out::println)

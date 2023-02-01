@@ -29,11 +29,11 @@ public class Lec03BackpressureTest {
     public void backpressure() {
         Flux<String> flux = this.rSocket.requestStream(DefaultPayload.create(""))
                 .map(Payload::getDataUtf8)
-                .delayElements(Duration.ofSeconds(1))
+                .delayElements(Duration.ofSeconds(1)) // slow consumer simulation
                 .doOnNext(System.out::println);
 
         StepVerifier.create(flux)
-                .expectNextCount(1000)
+                .expectNextCount(100)
                 .verifyComplete();
 
     }

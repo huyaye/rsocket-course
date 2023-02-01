@@ -35,6 +35,15 @@
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver-dns-native-macos</artifactId>
+            <version>4.1.68.Final</version>
+            <classifier>osx-aarch_64</classifier>
+            <scope>test</scope>
+        </dependency>
+
+<!--        implementation 'io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64'-->
     </dependencies>
 
     <dependencyManagement>

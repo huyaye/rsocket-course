@@ -26,8 +26,7 @@ public class Lec04PersistentConnectionTest {
                 .connect(TcpClientTransport.create("localhost", 6565))
                 .doOnNext(r -> System.out.println("going to connect"));
 
-        this.rSocketClient = RSocketClient.from(socketMono);
-
+        this.rSocketClient = RSocketClient.from(socketMono);    // Connection persistent
     }
 
     @Test
@@ -42,9 +41,9 @@ public class Lec04PersistentConnectionTest {
                 .expectNextCount(10)
                 .verifyComplete();
 
-
+        // 이 기간동안 서버가 Restart 되는 경우에도 flux2 subscribe 는 성공한다. setup() 메소드 설정때문.
         System.out.println("going to sleep");
-        Thread.sleep(5000);
+        Thread.sleep(15000);
         System.out.println("woke up");
 
         Flux<String> flux2 =  this.rSocketClient.requestStream(Mono.just(DefaultPayload.create("")))
@@ -56,9 +55,5 @@ public class Lec04PersistentConnectionTest {
         StepVerifier.create(flux2)
                 .expectNextCount(10)
                 .verifyComplete();
-
-
     }
-
-
 }

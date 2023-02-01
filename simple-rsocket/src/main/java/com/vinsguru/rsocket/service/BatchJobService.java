@@ -37,7 +37,7 @@ public class BatchJobService implements RSocket {
         int output = input * input * input;
         ResponseDto responseDto = new ResponseDto(input, output);
         Payload payload = ObjectUtil.toPayload(responseDto);
-        return this.rSocket.fireAndForget(payload);
+        return this.rSocket.fireAndForget(payload); // peer to peer
     }
 
 
