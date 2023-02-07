@@ -11,23 +11,21 @@ import java.util.Map;
 
 @Repository // for demo purposes
 public class UserRepository {
+    @Autowired
+    private PasswordEncoder encoder;
 
-//    @Autowired
-//    private PasswordEncoder encoder;
-//
-//    private Map<String, UserDetails> db;
-//
-//    @PostConstruct
-//    private void init(){
-//        this.db = Map.of(
-//                "user", User.withUsername("user").password(encoder.encode("password")).roles("USER").build(),
-//                "admin", User.withUsername("admin").password(encoder.encode("password")).roles("ADMIN").build(),
-//                "client", User.withUsername("client").password(encoder.encode("password")).roles("TRUSTED_CLIENT").build()
-//        );
-//    }
+    private Map<String, UserDetails> db;
 
-//    public UserDetails findByUsername(String username){
-//        return this.db.get(username);
-//    }
+    @PostConstruct
+    private void init(){
+        this.db = Map.of(
+                "user", User.withUsername("user").password(encoder.encode("password")).roles("USER").build(),
+                "admin", User.withUsername("admin").password(encoder.encode("password")).roles("ADMIN").build(),
+                "client", User.withUsername("client").password(encoder.encode("password")).roles("TRUSTED_CLIENT").build()
+        );
+    }
 
+    public UserDetails findByUsername(String username){
+        return this.db.get(username);
+    }
 }

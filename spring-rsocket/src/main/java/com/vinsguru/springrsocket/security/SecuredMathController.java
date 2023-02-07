@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 
 @Controller
 @MessageMapping("math.service.secured")
-public class SecuredMathController {
+public class  SecuredMathController {
 
     @Autowired
     private MathService service;
