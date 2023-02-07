@@ -13,6 +13,10 @@ import reactor.core.publisher.Mono;
 @MessageMapping("math.validation")
 public class InputValidationController {
 
+    /**
+     * java -jar rsc-0.9.1.jar --debug --request --route math.validation.double.31 --stacktrace tcp://localhost:6565
+     * Lec03InputValidationTest.validationTest()
+     */
     @MessageMapping("double.{input}")
     public Mono<Integer> doubleIt(@DestinationVariable int input){
         return Mono.just(input)

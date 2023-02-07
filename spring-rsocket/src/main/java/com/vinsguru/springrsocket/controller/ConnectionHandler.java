@@ -14,20 +14,21 @@ public class ConnectionHandler {
     @Autowired
     private MathClientManager clientManager;
 
-/*    @ConnectMapping
-    public Mono<Void> handleConnection(ClientConnectionRequest request, RSocketRequester rSocketRequester){
-        System.out.println("connection setup : " + request);
-        return request.getSecretKey().equals("password") ? Mono.empty() :
-                Mono.fromRunnable(() -> rSocketRequester.rsocketClient().dispose());
-    }*/
+    // Lec06ConnectionSetupTest
+//    @ConnectMapping
+//    public Mono<Void> handleConnection(ClientConnectionRequest request, RSocketRequester rSocketRequester){
+//        System.out.println("connection setup : " + request);
+//        return request.getSecretKey().equals("password") ? Mono.empty() :
+//                Mono.fromRunnable(() -> rSocketRequester.rsocketClient().dispose());
+//    }
 
     @ConnectMapping
     public Mono<Void> noEventConnection(RSocketRequester rSocketRequester){
-        System.out.println("connection setup" );
+        System.out.println("default connection setup" );
         return Mono.empty();
     }
 
-
+    // Lec07ConnectionManagerTest
     @ConnectMapping("math.events.connection")
     public Mono<Void> mathEventConnection(RSocketRequester rSocketRequester){
         System.out.println("math event connection setup" );

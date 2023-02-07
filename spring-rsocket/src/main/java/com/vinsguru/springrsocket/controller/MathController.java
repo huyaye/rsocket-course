@@ -10,12 +10,16 @@ import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+// Lec01RSocketTest
 @Controller
 public class MathController {
 
     @Autowired
     private MathService service;
 
+    /**
+     * java -jar rsc-0.9.1.jar --debug --request --data "{\"input\":5}" --route math.service.print --stacktrace tcp://localhost:6565
+     */
     @MessageMapping("math.service.print")
     public Mono<Void> print(Mono<ComputationRequestDto> requestDtoMono){
         return this.service.print(requestDtoMono);

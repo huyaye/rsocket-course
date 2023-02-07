@@ -9,6 +9,7 @@ import reactor.core.publisher.Mono;
 @MessageMapping("math.service")
 public class MathVariableController {
 
+    // Lec02DestinationVariableTest
     @MessageMapping("print.{input}")
     public Mono<Void> print(@DestinationVariable int input){
         System.out.println("Received : " + input);

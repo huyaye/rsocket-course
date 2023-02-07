@@ -26,13 +26,17 @@ public class Lec09SessionResumptionTest {
     @Autowired
     private RSocketRequester.Builder builder;
 
+    /**
+     * nginx, spring server 먼저 실행 후 테스트
+     * TC 수행중 nginx 종료,재시작
+     * 세션테스트를 위해서 proxy를 종료,재시작하는 식으로 테스트
+     */
     @Test
     public void connectionTest() {
-
         RSocketRequester requester = this.builder
                 .rsocketConnector(c -> c
                         .resume(resumeStrategy())
-                        .reconnect(retryStrategy()))
+                        .reconnect(retryStrategy()))    // Stream 응답일 경우, Client에서는 connect시도를 하지 않는다.
                 .transport(TcpClientTransport.create("localhost", 6566));
 
         Flux<ComputationResponseDto> flux = requester.route("math.service.table")
@@ -43,8 +47,6 @@ public class Lec09SessionResumptionTest {
         StepVerifier.create(flux)
                 .expectNextCount(1000)
                 .verifyComplete();
-
-
     }
 
     private Resume resumeStrategy(){
@@ -54,7 +56,7 @@ public class Lec09SessionResumptionTest {
     }
 
     private Retry retryStrategy(){
-        return Retry.fixedDelay(100, Duration.ofSeconds(1))
+        return Retry.fixedDelay(10 , Duration.ofSeconds(1))
                     .doBeforeRetry(s -> System.out.println("Retrying connection : " + s.totalRetriesInARow()));
     }
 

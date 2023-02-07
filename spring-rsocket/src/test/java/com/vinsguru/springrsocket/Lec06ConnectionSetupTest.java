@@ -26,10 +26,9 @@ public class Lec06ConnectionSetupTest {
 
     @BeforeAll
     public void setup(){
-
         ClientConnectionRequest request = new ClientConnectionRequest();
         request.setClientId("order-service");
-        request.setSecretKey("passwrd");
+        request.setSecretKey("password11 ");
 
         this.requester = this.builder
                 .setupData(request)
@@ -38,7 +37,6 @@ public class Lec06ConnectionSetupTest {
 
     @RepeatedTest(3)
     public void connectionTest() {
-
         Mono<ComputationResponseDto> mono = this.requester.route("math.service.square")
                 .data(new ComputationRequestDto(ThreadLocalRandom.current().nextInt(1, 50)))
                 .retrieveMono(ComputationResponseDto.class)

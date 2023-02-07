@@ -21,21 +21,21 @@ import java.time.Duration;
         }
 )
 public class Lec08ConnectionRetryTest {
-
     @Autowired
     private RSocketRequester.Builder builder;
 
+    /*
+        Spring server 먼저 실행시키고, TC 수행.
+        TC 수행중 Spring server 종료,재시작.
+     */
     @Test
     public void connectionTest() throws InterruptedException {
-
         RSocketRequester requester1 = this.builder
                 .rsocketConnector(c -> c.reconnect(Retry.fixedDelay(10, Duration.ofSeconds(2))
                                         .doBeforeRetry(s -> System.out.println("retrying " + s.totalRetriesInARow()))))
                 .transport(TcpClientTransport.create("localhost", 6565));
 
-
         for (int i = 0; i < 50; i++) {
-
             Mono<ComputationResponseDto> mono = requester1.route("math.service.square")
                     .data(new ComputationRequestDto(i))
                     .retrieveMono(ComputationResponseDto.class)
@@ -47,8 +47,5 @@ public class Lec08ConnectionRetryTest {
 
             Thread.sleep(2000);
         }
-
-
     }
-
 }

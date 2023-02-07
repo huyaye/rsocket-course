@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
 @Controller
-public class BatchJobResponseController {
+public class  BatchJobResponseController {
 
     @MessageMapping("batch.job.response")
     public Mono<Void> response(Mono<Integer> integerMono){

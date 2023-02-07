@@ -10,6 +10,7 @@ import java.time.Duration;
 @Controller
 public class BatchJobController {
 
+    // Lec04CallbackTest
     @MessageMapping("batch.job.request")
     public Mono<Void> submitJob(Mono<Integer> integerMono, RSocketRequester rSocketRequester){
         this.process(integerMono, rSocketRequester);

@@ -30,7 +30,8 @@ public class Lec11ClientSideLoadBalancingTest {
     @Test
     public void clientSide() throws InterruptedException {
 
-        RSocketRequester requester = this.builder.transports(targets, WeightedLoadbalanceStrategy.create());
+//        RSocketRequester requester = this.builder.transports(targets, WeightedLoadbalanceStrategy.create());
+        RSocketRequester requester = this.builder.transports(targets, new RoundRobinLoadbalanceStrategy());
 
         for (int i = 0; i < 50; i++) {
             requester.route("math.service.print").data(new ComputationRequestDto(i)).send().subscribe();
