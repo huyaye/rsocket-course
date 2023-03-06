@@ -1,5 +1,6 @@
 package com.vinsguru.springrsocket;
 
+import com.vinsguru.springrsocket.config.TraceConst;
 import com.vinsguru.springrsocket.dto.ChartResponseDto;
 import com.vinsguru.springrsocket.dto.ComputationRequestDto;
 import com.vinsguru.springrsocket.dto.ComputationResponseDto;
@@ -14,6 +15,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class Lec01RSocketTest {
@@ -22,6 +26,8 @@ class Lec01RSocketTest {
 
 	@Autowired
 	private RSocketRequester.Builder builder;
+
+	private ExecutorService executorService = Executors.newFixedThreadPool(3);
 
 	@BeforeAll
 	public void setup(){
@@ -32,6 +38,7 @@ class Lec01RSocketTest {
 	@Test
 	public void fireAndForget(){
 		Mono<Void> mono = this.requester.route("math.service.print")
+				.metadata("TID_00001", TraceConst.TRACE_ID_MIME_TYPE)
 				.data(new ComputationRequestDto(5))
 				.send();
 
@@ -42,6 +49,7 @@ class Lec01RSocketTest {
 	@Test
 	public void requestResponse(){
 		Mono<ComputationResponseDto> mono = this.requester.route("math.service.square")
+				.metadata("TID_00002", TraceConst.TRACE_ID_MIME_TYPE)
 				.data(new ComputationRequestDto(5))
 				.retrieveMono(ComputationResponseDto.class)
 				.doOnNext(System.out::println);
@@ -52,15 +60,21 @@ class Lec01RSocketTest {
 	}
 
 	@Test
-	public void requestStream(){
-		Flux<ComputationResponseDto> flux = this.requester.route("math.service.table")
-				.data(new ComputationRequestDto(5))
-				.retrieveFlux(ComputationResponseDto.class)
-				.doOnNext(System.out::println);
+	public void requestStream() throws Exception {
+		for (int i = 0; i < 3; i++) {
+			executorService.execute(() -> {
+				Flux<ComputationResponseDto> flux = requester.route("math.service.table")
+						.data(new ComputationRequestDto(5))
+						.retrieveFlux(ComputationResponseDto.class)
+						.doOnNext(System.out::println);
 
-		StepVerifier.create(flux)
-				.expectNextCount(10)
-				.verifyComplete();
+				StepVerifier.create(flux)
+						.expectNextCount(10)
+						.verifyComplete();
+			});
+			Thread.sleep(2000);
+		}
+		Thread.sleep(1000000);
 	}
 
 	@Test
